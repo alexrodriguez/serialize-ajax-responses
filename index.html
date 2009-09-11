@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Serializing ajax response with prototype</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Alexander Rodriguez">
+	<!-- Date: 2009-09-11 -->
+	<script type="text/javascript" src="http://prototypejs.org/assets/2009/8/31/prototype.js"></script>
+	<script type="text/javascript" src="ccs.js"></script>
+	<script type="text/javascript" charset="utf-8">
+  document.observe("dom:loaded", function() {
+    $("link").observe("click", function() {
+      var times = 0, queue = new CCS.AjaxQueue("link"), foo;
+      foo = function() {
+        var sequence, options;
+        sequence = times;
+        options = {
+          method: "get",
+          parameters: {times: sequence},
+          onComplete: function() {
+            console.log("Sequence#: " + sequence);
+          }
+        };
+        
+        if (times === 5) {
+          return;
+        }
+        times += 1;
+
+        queue.createUpdater("response", "server.jsp", options);
+        setTimeout(foo, 300);
+      };
+
+      setTimeout(foo, 300);
+    });    
+  });
+  </script>
+</head>
+<body>
+  <a id="link" href="#">Click me and watch the Firebug console and/or the div below.</a>
+  <div id="response">
+  </div>
+</body>
+</html>
